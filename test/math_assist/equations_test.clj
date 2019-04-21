@@ -1,4 +1,4 @@
-(ns math-assist.core-test
+(ns math-assist.equations-test
   (:require [clojure.test :refer :all]
             [math-assist.equations :refer :all]
             [math-assist.random :as random]))
@@ -25,4 +25,11 @@
                           {:type    "*"
                            :numbers [4 5]
                            :answer  20})
-           "4*5"))))
+           "4*5")))
+
+  (testing "convert equation to object"
+    (is (= (eqn-to-object {:type    "*"
+                           :numbers [4 5]
+                           :answer  20})
+           {:equation "4*5"
+            :answer   20}))))

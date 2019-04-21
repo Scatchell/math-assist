@@ -4,7 +4,10 @@
 (def types {"*" *})
 
 (defn equation
-  "I don't do a whole lot."
+  "Generate an equation given a specific configuration, including:
+   :type - which math operation to perform
+   :numbers - how many numbers to generate in the equation
+   :max - max size of each randomly generated number"
   [conf]
   (let [num-of-numbers (:numbers conf)
         action (types (:type conf))
@@ -19,7 +22,25 @@
 (defn- remove-last-char [string]
   (apply str (drop-last string)))
 
-(defn eqn-to-string [conf eqn]
+(defn eqn-to-object
+  "convert equation to clojure edn representation "
+  [eqn]
+  (let [numbers (reverse (:numbers eqn))
+        result (reduce (types (:type eqn)) numbers)
+        eqn-string (reduce (fn [eqn-string num]
+                             (str num (:type eqn) eqn-string))
+                           ""
+                           numbers)]
+    {:equation (remove-last-char eqn-string)
+     :answer   result}
+    )
+  )
+
+(defn eqn-to-string
+  "convert equation to string representation
+  given a specific configuration, including:
+  :show-result - whether or not to show the answer in the string"
+  [conf eqn]
   (let [numbers (reverse (:numbers eqn))
         result (reduce (types (:type eqn)) numbers)
         eqn-string (reduce (fn [eqn-string num]

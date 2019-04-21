@@ -1,5 +1,6 @@
 (ns math-assist.core
-  (:require [math-assist.random :as random]))
+  (:require [math-assist.random :as random]
+            [ring.adapter.jetty :as jetty]))
 
 (def types {"*" *})
 
@@ -32,7 +33,15 @@
         equation)))
   )
 
-(defn main []
+(defn handler [request]
+  {:status  200
+   :headers {"Content-Type" "text/plain"}
+   :body    "Hello Clojure, Hello Ring!"})
+
+(defn -main []
+  (jetty/run-jetty handler {:port 3000}))
+
+(defn repl-run []
   (let [eqns (repeatedly 10 #(equation {:type    "*"
                                         :numbers 2
                                         :max     20}))]

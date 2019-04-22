@@ -3,12 +3,24 @@
         [ring.adapter.jetty :only [run-jetty]]
         [hiccup.page :only [include-js include-css html5]]
         [hiccup.element :only [javascript-tag]])
-  (:require [clj-json.core :as json]))
+  (:require [clj-json.core :as json]
+            [math-assist.equations :as eqns]))
 
 (defmacro render-html5 [& elts]
   `{:status  200
     :headers {"Content-Type" "text/html; charset=UTF-8"}
     :body    (html5 ~@elts)})
+
+(defn- generate-equation []
+  (eqns/eqn-to-object
+    (eqns/equation {:type    "*"
+                    :numbers 2
+                    :max     20})))
+
+(defn render-equations [req]
+  {:status  200
+   :headers {"Content-Type" "application/json"}
+   :body    (json/generate-string (repeatedly 10 generate-equation))})
 
 (defn render-notfound [req]
   {:status  404
@@ -31,6 +43,7 @@
 (defn- ring-handler [req]
   (let [hf (case (req :uri)
              "/" render-index
+             "/equations" render-equations
              render-notfound)]
     (hf req)))
 

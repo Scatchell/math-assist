@@ -4,46 +4,48 @@
             [jayq.util :as util]
             [ajax.core :refer [GET POST]]))
 
-(def equations (atom nil))
+;todo add database and store user results after question completion
+;todo limit total number of questions (eventually restfully?) to get final results/score
 
-(defn- render-next-question []
+(def equations (atom '()))
+
+(defn- render-question []
   (let [current-equation (peek @equations)]
     (html ($ "#equations-list")
           (crate/html
             [:li (get current-equation "equation")]))))
 
+(defn- eqn-handler [response]
+  (swap! equations #(into '() (concat % response)))
+  (render-question))
+
+(defn- get-equations []
+  (GET "/equations" {:handler         eqn-handler
+                     :response-format :json}))
+
 (defn- check-answer [input]
   (let [current-equation (peek @equations)
         answer (get current-equation "answer")]
 
-    (if (= (js/parseInt input) answer)
-      (html ($ "#correctness")
-            (crate/html
-              [:p {:class "correct"} "Correct!"]))
-
-      (html ($ "#correctness")
-            (crate/html
+    (html ($ "#correctness")
+          (crate/html
+            (if (= (js/parseInt input) answer)
+              [:p {:class "correct"} "Correct!"]
               [:p {:class "incorrect"}
-               (str "Incorrect :(. Correct answer is: " answer " --- you entered: " input)]))
-      )
+               (str "Incorrect :(. Correct answer is: " answer " --- you entered: " input)])))
 
     (html ($ "#last-question")
           (crate/html
             [:p {:class "&&&"}
-             (str (get current-equation "equation") "=" (get current-equation "answer"))]))
+             (str (get current-equation "equation") "=" (get current-equation "answer"))]))))
 
-    (prn "checking answer for " (get current-equation "equation"))
-    (prn "answer" (get current-equation "answer"))
-    (prn "input" input))
-
+(defn- next-question []
   (swap! equations pop)
-  (render-next-question)
-  )
-
+  (if (empty? @equations)
+    (get-equations)
+    (render-question)))
 
 (defn- main []
-  (util/log "main")
-
   (html ($ "#main")
         (crate/html
           [:div
@@ -61,20 +63,16 @@
               (let [k (.-keyCode event)]
                 (when (= k 13)
                   (check-answer (.val ($ "#equation-input")))
+                  (next-question)
                   (-> ($ "#equation-input")
                       (.val "")
                       (.focus))))))
 
   (.focus ($ "#equation-input")))
 
-(defn- eqn-handler [response]
-  (compare-and-set! equations nil response)
-  (render-next-question))
-
 (document-ready
   (fn []
-    (GET "/equations" {:handler         eqn-handler
-                       :response-format :json})
+    (get-equations)
     (util/log "ready...")
     (main)))
 

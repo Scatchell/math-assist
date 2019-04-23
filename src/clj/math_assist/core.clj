@@ -38,7 +38,7 @@
                  "//cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.js"
                  "/js/gen/dev/goog/base.js"
                  "/js/gen/dev/main.js")
-     (javascript-tag "goog.require('hello_world')")]))
+     (javascript-tag "goog.require('math_assist')")]))
 
 (defn- ring-handler [req]
   (let [hf (case (req :uri)

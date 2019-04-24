@@ -1,10 +1,12 @@
 (ns math-assist.core
-  (:use [ring.middleware reload params resource file-info]
+  (:use [ring.middleware reload params resource file-info json]
         [ring.adapter.jetty :only [run-jetty]]
         [hiccup.page :only [include-js include-css html5]]
-        [hiccup.element :only [javascript-tag]])
-  (:require [clj-json.core :as json]
-            [math-assist.equations :as eqns]))
+        [hiccup.element :only [javascript-tag]]
+        )
+  (:require [math-assist.equations :as eqns]
+            [math-assist.datastore.equations :as equations]
+            ))
 
 (defmacro render-html5 [& elts]
   `{:status  200
@@ -17,10 +19,16 @@
                     :numbers 2
                     :max     20})))
 
+(defn save-answers [req]
+  ;(equations/save )
+  {:status  200
+   :headers {"Content-Type" "application/json"}
+   :body    {:status "Saved!"}})
+
 (defn render-equations [req]
   {:status  200
    :headers {"Content-Type" "application/json"}
-   :body    (json/generate-string (repeatedly 10 generate-equation))})
+   :body    (repeatedly 1 generate-equation)})
 
 (defn render-notfound [req]
   {:status  404
@@ -34,8 +42,8 @@
      (include-css "/css/styles.css")]
     [:body
      [:div#main "Welcome!"]
-     (include-js "//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.js"
-                 "//cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.js"
+     (include-js "/jquery-3.4.0.min.js"
+                 ;"//cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.js"
                  "/js/gen/dev/goog/base.js"
                  "/js/gen/dev/main.js")
      (javascript-tag "goog.require('math_assist')")]))
@@ -44,6 +52,7 @@
   (let [hf (case (req :uri)
              "/" render-index
              "/equations" render-equations
+             "/answers" save-answers
              render-notfound)]
     (hf req)))
 
@@ -51,8 +60,11 @@
 (def ^:private ring-app*
   (-> #'ring-handler
       (wrap-resource "web")
+      (wrap-resource "externs")
       ;todo wrap-file-info deprecated
       (wrap-file-info)
+      (wrap-json-body)
+      (wrap-json-response)
       (wrap-params)))
 
 (defn -main []

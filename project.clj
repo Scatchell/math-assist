@@ -9,11 +9,13 @@
                  [ring "1.6.3"]
                  [hiccup "1.0.5"]
                  [clj-json "0.5.3"]
+                 [ring/ring-json "0.4.0"]
+                 [com.novemberain/monger "3.1.0" :exclusions [com.google.guava/guava]]
                  ; CLJS deps
+                 [org.clojure/clojurescript "1.10.520"]
                  [crate "0.2.5"]
                  [jayq "2.5.0"]
-                 [cljs-ajax "0.8.0"]
-                 [org.clojure/clojurescript "1.10.520"]]
+                 [cljs-ajax "0.8.0"]]
   :cljsbuild {
               :builds [{
                         :source-paths ["src-cljs"]

@@ -8,6 +8,7 @@
 ;todo limit total number of questions (eventually restfully?) to get final results/score
 
 (def equations (atom '()))
+(def finished-equations (atom '()))
 
 (defn- render-question []
   (let [current-equation (peek @equations)]
@@ -16,6 +17,7 @@
             [:li (get current-equation "equation")]))))
 
 (defn- eqn-handler [response]
+  ;todo use conj instead of concat and into?
   (swap! equations #(into '() (concat % response)))
   (render-question))
 
@@ -27,22 +29,37 @@
   (let [current-equation (peek @equations)
         answer (get current-equation "answer")]
 
-    (html ($ "#correctness")
-          (crate/html
-            (if (= (js/parseInt input) answer)
-              [:p {:class "correct"} "Correct!"]
-              [:p {:class "incorrect"}
-               (str "Incorrect :(. Correct answer is: " answer " --- you entered: " input)])))
+    (let [answer-correct (= (js/parseInt input) answer)]
+      (html ($ "#correctness")
+            (crate/html
+              (if answer-correct
+                [:p {:class "correct"} "Correct!"]
+                [:p {:class "incorrect"}
+                 (str "Incorrect :(. Correct answer is: " answer " --- you entered: " input)])))
 
-    (html ($ "#last-question")
-          (crate/html
-            [:p {:class "&&&"}
-             (str (get current-equation "equation") "=" (get current-equation "answer"))]))))
+      (swap! finished-equations
+             (let [equation-with-correctness
+                   (assoc current-equation :user-answer
+                                           (if answer-correct :correct :incorrect))]
+               #(into '() (concat % equation-with-correctness))))
+
+      (html ($ "#last-question")
+            (crate/html
+              [:p {:class answer-correct}
+               (str (get current-equation "equation") "=" (get current-equation "answer"))])))))
+
+(defn- save-equations []
+  (POST "/answers"
+        {:params        @finished-equations
+         :handler       println
+         :error-handler println})
+  )
 
 (defn- next-question []
   (swap! equations pop)
   (if (empty? @equations)
-    (get-equations)
+    (do (save-equations)
+        (get-equations))
     (render-question)))
 
 (defn- main []
@@ -73,6 +90,5 @@
 (document-ready
   (fn []
     (get-equations)
-    (util/log "ready...")
     (main)))
 

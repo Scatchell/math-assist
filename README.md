@@ -1,14 +1,24 @@
 # math-assist
 
-A Clojure library designed to ... well, that part is up to you.
+Mental math practice tool that should allow users to advance their math skills and enable them to do math in their head easily and quickly through practice.
+
+## Main features
+
+- Generate random equations for user to practice with and check their answers `functional yet? Yes`
+- Store user statistics that can be displayed to show progress and current score/success rate `functional yet? No`
+- Increase/Decrease difficulty level over time based on how often they get questions correct, and the time it takes a user to present a correct answer successfully `functional yet? No`
+- Allow user to request certain types of equations to learn from (i.e. multiplication, division, etc. etc.) `functional yet? No`
+- Offer mental math tips/tricks at varying difficulty levels `functional yet? No`
+- Offer a "math-off" mode where two people can compete with the same set of equations to see who finished them more quickly/accurately `functional yet? No`
+
 
 ## Usage
 
-FIXME
+Under construction, not ready for public usage yet
 
 ## License
 
-Copyright © 2019 FIXME
+Copyright © 2019 Anthony Scatchell
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.

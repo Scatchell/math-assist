@@ -1,3 +1,5 @@
+;todo create connection for server (with mount) and disconnect when unmounting (to avoid unnecessary connections to db)
+
 (ns math-assist.handlers
   (:use [hiccup.page :only [include-js include-css html5]]
         [hiccup.element :only [javascript-tag]])
@@ -13,7 +15,8 @@
   (eqns/eqn-to-object
     (eqns/equation {:type    "*"
                     :numbers 2
-                    :max     20})))
+                    :max     12
+                    :min     5})))
 
 (defn save-answers [req]
   (let [equations (get-in req [:params "equations"])]

@@ -1,5 +1,5 @@
 (ns math-assist.random)
 
-(defn number [limit]
-  (rand-int limit)
-  )
+(defn number [options]
+  (let [{:keys [min max] :or {min 0 max 10}} options]
+    (+ min (rand-int (- (+ 1 max) min)))))

@@ -11,7 +11,7 @@
   [conf]
   (let [num-of-numbers (:numbers conf)
         action (types (:type conf))
-        numbers (repeatedly num-of-numbers #(random/number (:max conf)))
+        numbers (repeatedly num-of-numbers #(random/number conf))
         result (reduce action numbers)
         ]
     {:type    "*"

@@ -12,7 +12,7 @@
       (wrap-resource "externs")
       ;todo wrap-file-info deprecated
       (wrap-file-info)
-      (wrap-json-body)
+      (wrap-json-params)
       (wrap-json-response)
       (wrap-params)))
 

@@ -8,13 +8,11 @@
 
 (defn save [equations]
   (let [conn (mg/connect)
-        db (mg/get-db conn (:database config))
-        coll collection]
-    (doseq [eqn equations] (mc/insert db coll eqn))))
+        db (mg/get-db conn (:database config))]
+    (doseq [eqn equations] (mc/insert db collection eqn))))
 
 (defn get-all []
   (let [conn (mg/connect)
-        db (mg/get-db conn (:database config))
-        coll collection]
+        db (mg/get-db conn (:database config))]
 
-    (mc/find-maps db coll)))
+    (mc/find-maps db collection)))

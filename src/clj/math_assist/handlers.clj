@@ -16,7 +16,9 @@
                     :max     20})))
 
 (defn save-answers [req]
-  ;(equations/save )
+  (let [equations (get-in req [:params "equations"])]
+    (prn "request: " req)
+    (equations/save equations))
   {:status  200
    :headers {"Content-Type" "application/json"}
    :body    {:status "Saved!"}})

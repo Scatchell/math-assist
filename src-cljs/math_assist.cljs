@@ -39,9 +39,10 @@
 
       (swap! finished-equations
              (let [equation-with-correctness
-                   (assoc current-equation :user-answer
-                                           (if answer-correct :correct :incorrect))]
-               #(into '() (concat % equation-with-correctness))))
+                   (assoc current-equation
+                     :user-answer
+                     (if answer-correct :correct :incorrect))]
+               #(conj % equation-with-correctness)))
 
       (html ($ "#last-question")
             (crate/html
@@ -50,9 +51,11 @@
 
 (defn- save-equations []
   (POST "/answers"
-        {:params        @finished-equations
+        {:params        {:equations @finished-equations}
          :handler       println
-         :error-handler println})
+         :error-handler println
+         :format        :json})
+  (compare-and-set! finished-equations @finished-equations '())
   )
 
 (defn- next-question []

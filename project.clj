@@ -11,6 +11,7 @@
                  [clj-json "0.5.3"]
                  [ring/ring-json "0.4.0"]
                  [com.novemberain/monger "3.1.0" :exclusions [com.google.guava/guava]]
+                 [mount "0.1.12"]
                  ; CLJS deps
                  [org.clojure/clojurescript "1.10.520"]
                  [crate "0.2.5"]
@@ -23,4 +24,7 @@
                                        :output-dir    "resources/web/js/gen/dev"
                                        :optimizations :none
                                        :pretty-print  true}}]}
+  :profiles {:dev  {:resource-paths ["resources/config/dev/"]}
+             :test {:resource-paths ["resources/config/test/"]}
+             :prod {:resource-paths ["resources/config/prod/"]}}
   :main math-assist.core)

@@ -17,9 +17,10 @@
                     :min     5})))
 
 (defn save-answers [req]
-  (let [equations (get-in req [:params "equations"])]
-    (prn "request: " req)
-    (equations/save equations))
+  (let [equations (get-in req [:params "equations"])
+        user-id (get-in req [:params "user-id"])
+        eqns-with-user (map #(conj % {:user-id user-id}) equations)]
+    (equations/save eqns-with-user))
   {:status  200
    :headers {"Content-Type" "application/json"}
    :body    {:status "Saved!"}})

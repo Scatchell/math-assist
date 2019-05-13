@@ -3,8 +3,8 @@
             [math-assist.equations :refer :all]
             [math-assist.random :as random]))
 
-(deftest a-test
-  (testing ""
+(deftest equations
+  (testing "generate equation"
     (with-redefs [random/number (constantly 10)]
       (is (= (equation {:numbers 2
                         :type    "*"

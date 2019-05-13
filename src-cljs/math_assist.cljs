@@ -16,7 +16,6 @@
             [:li (get current-equation "equation")]))))
 
 (defn- eqn-handler [response]
-  ;todo use conj instead of concat and into?
   (swap! equations #(into '() (concat % response)))
   (render-question))
 
@@ -50,7 +49,9 @@
 
 (defn- save-equations []
   (POST "/answers"
-        {:params        {:equations @finished-equations}
+        {:params        {:equations @finished-equations
+                         ;todo make user id specific for each user
+                         :user-id "12345"}
          :handler       println
          :error-handler println
          :format        :json})

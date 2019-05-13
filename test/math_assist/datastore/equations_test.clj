@@ -3,13 +3,11 @@
   (:require [math-assist.datastore.equations :refer :all]
             [monger.core :as mg]
             [monger.collection :as mc]
-            [math-assist.conf :refer [config]]
+            [math-assist.database :refer [db]]
             [mount.core :as mount]))
 
 (defn- clear-db []
-  (let [conn (mg/connect)
-        db (mg/get-db conn (:database config))
-        coll "equations"]
+  (let [coll "equations"]
     (mc/remove db coll)))
 
 (defn start-mount-fixture [f]

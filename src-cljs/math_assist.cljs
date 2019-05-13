@@ -4,7 +4,6 @@
             [jayq.util :as util]
             [ajax.core :refer [GET POST]]))
 
-;todo add database and store user results after question completion
 ;todo limit total number of questions (eventually restfully?) to get final results/score
 
 (def equations (atom '()))

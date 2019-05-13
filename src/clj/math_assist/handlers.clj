@@ -1,5 +1,3 @@
-;todo create connection for server (with mount) and disconnect when unmounting (to avoid unnecessary connections to db)
-
 (ns math-assist.handlers
   (:use [hiccup.page :only [include-js include-css html5]]
         [hiccup.element :only [javascript-tag]])

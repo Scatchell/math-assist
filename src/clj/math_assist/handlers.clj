@@ -5,6 +5,10 @@
             [math-assist.datastore.equations :as equations]
             [math-assist.equation-statistics :as eqn-stats]))
 
+;todo automatically changing difficulty level based on player performance
+;todo add timer to game! I have some thoughts about this: Possibly simply consider an answer wrong if it surpasses a certain time limit as a simple start? More complex would be to look at a deviation from the mean of time to answer questions, and the more the deviation the lower a "correctness" score until it reaches the point of 0, meaning essentially incorrect. The timer should not be something that makes people nervous while answering questions.
+;todo Page to display statistics? (maybe for later after more statistics are added)
+
 (defmacro render-html5 [& elts]
   `{:status  200
     :headers {"Content-Type" "text/html; charset=UTF-8"}

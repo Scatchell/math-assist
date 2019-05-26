@@ -47,4 +47,28 @@
              :correctness 100M}
             {:start       10
              :end         20
-             :correctness 50M}]))))
+             :correctness 50M}])))
+
+  (testing "difficulty increase when many questions are correct"
+    (is (= (difficulty-assessment {:equations [{:equation "5*7"
+                                                :correct  true}
+
+                                               {:equation "10*12"
+                                                :correct  true}
+
+                                               {:equation "12*13"
+                                                :correct  true}]})
+
+           :increase)))
+
+  (testing "difficulty decrease when many questions are incorrect"
+    (is (= (difficulty-assessment {:equations [{:equation "5*7"
+                                                :correct  true}
+
+                                               {:equation "10*12"
+                                                :correct  false}
+
+                                               {:equation "12*13"
+                                                :correct  false}]})
+
+           :decrease))))

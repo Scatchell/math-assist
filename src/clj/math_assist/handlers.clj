@@ -2,7 +2,8 @@
   (:use [hiccup.page :only [include-js include-css html5]]
         [hiccup.element :only [javascript-tag]])
   (:require [math-assist.equations :as eqns]
-            [math-assist.datastore.equations :as equations]))
+            [math-assist.datastore.equations :as equations]
+            [math-assist.equation-statistics :as eqn-stats]))
 
 (defmacro render-html5 [& elts]
   `{:status  200
@@ -25,12 +26,12 @@
    :headers {"Content-Type" "application/json"}
    :body    {:status "Saved!"}})
 
-(defn render-equations [req]
+(defn- render-equations [req]
   {:status  200
    :headers {"Content-Type" "application/json"}
    :body    (repeatedly 1 generate-equation)})
 
-(defn render-notfound [req]
+(defn- render-notfound [req]
   {:status  404
    :headers {"Content-Type" "text/plain"}
    :body    (str "path not found: " (:uri req))})
@@ -48,11 +49,18 @@
                  "/js/gen/dev/main.js")
      (javascript-tag "goog.require('math_assist')")]))
 
+(defn- get-statistics [req]
+  (let [user-id (get-in req [:params "user-id"])]
+    {:status  200
+     :headers {"Content-Type" "application/json"}
+     :body    (eqn-stats/correctness {:equations (equations/get-by-user user-id)})}))
+
 (defn math-assist-handlers [req]
   (let [hf (case (req :uri)
              "/" render-index
              "/equations" render-equations
              "/answers" save-answers
+             "/statistics" get-statistics
              render-notfound)]
     (hf req)))
 

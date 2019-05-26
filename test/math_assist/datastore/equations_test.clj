@@ -22,16 +22,41 @@
 
 (use-fixtures :each clear-db-fixture)
 
-(deftest save-test
+(deftest save-equations
   (testing "save equations list to DB"
-    (let [equations '({:equation    "1*5"
-                       :answer      5
-                       :user-answer "correct"}
-                      {:equation    "2*5"
-                       :answer      10
-                       :user-answer "incorrect"})]
+    (let [equations [{:equation    "1*5"
+                      :answer      5
+                      :user-answer 5
+                      :correct     true}
+                     {:equation    "2*5"
+                      :answer      10
+                      :user-answer 11
+                      :correct     false}]]
 
       (save equations)
-      (is (= (count (get-all)) 2))
-      (is (= (dissoc (first (get-all)) :_id) (first equations)))
-      (is (= (dissoc (second (get-all)) :_id) (second equations))))))
+      (let [result (get-all)]
+        (is (= (count result) 2))
+        (is (= (dissoc (first result) :_id) (first equations)))
+        (is (= (dissoc (second result) :_id) (second equations)))))))
+
+
+(deftest get-equations-by-user
+  (testing "get equations by user"
+    (let [equations [{:equation    "1*5"
+                      :answer      5
+                      :user-answer 5
+                      :correct     true
+                      :user-id     "123"}
+                     {:equation    "2*5"
+                      :answer      10
+                      :user-answer 11
+                      :correct     false
+                      :user-id     "987"}]]
+
+      (save equations)
+
+      (let [result (get-by-user "123")]
+        (is (= (count result) 1))
+        (is (= (dissoc (first result) :_id) (first equations)))))))
+
+

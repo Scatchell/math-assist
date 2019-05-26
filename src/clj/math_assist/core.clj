@@ -1,5 +1,5 @@
 (ns math-assist.core
-  (:use [math-assist.handlers :only [ring-handler]]
+  (:use [math-assist.handlers :only [math-assist-handlers]]
         [ring.adapter.jetty :only [run-jetty]]
         [ring.middleware reload params resource file-info json]
         )
@@ -7,7 +7,7 @@
             ))
 
 (def ^:private ring-app*
-  (-> #'ring-handler
+  (-> #'math-assist-handlers
       (wrap-resource "web")
       (wrap-resource "externs")
       ;todo wrap-file-info deprecated

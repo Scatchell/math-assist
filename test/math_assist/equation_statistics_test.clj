@@ -5,15 +5,12 @@
 (deftest equation-statistics
   (testing "can determine correctness of 10-20 equations"
     (is (= (correctness [{:equation    "10*10"
-                          :user-answer 100
                           :correct     true}
 
                          {:equation    "13*13"
-                          :user-answer 169
                           :correct     true}
 
                          {:equation    "13*13"
-                          :user-answer 2
                           :correct     false}])
            [{:start       10
              :end         20
@@ -25,15 +22,12 @@
 
   (testing "correctness of both 10-20 and 20-30 equations"
     (is (= (correctness [{:equation    "5*7"
-                          :user-answer 100
                           :correct     true}
 
                          {:equation    "10*12"
-                          :user-answer 169
                           :correct     true}
 
                          {:equation    "12*13"
-                          :user-answer 2
                           :correct     false}])
 
            [{:start       0

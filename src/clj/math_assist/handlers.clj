@@ -13,7 +13,7 @@
   (eqns/eqn-to-object
     (eqns/equation {:type    "*"
                     :numbers 2
-                    :max     12
+                    :max     16
                     :min     5})))
 
 (defn save-answers [req]
@@ -48,7 +48,7 @@
                  "/js/gen/dev/main.js")
      (javascript-tag "goog.require('math_assist')")]))
 
-(defn ring-handler [req]
+(defn math-assist-handlers [req]
   (let [hf (case (req :uri)
              "/" render-index
              "/equations" render-equations

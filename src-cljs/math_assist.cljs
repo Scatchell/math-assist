@@ -27,10 +27,11 @@
   (let [current-equation (peek @equations)
         answer (get current-equation "answer")]
 
-    (let [answer-correct (= (js/parseInt input) answer)]
+    (let [user-answer (js/parseInt input)
+          correct (= user-answer answer)]
       (html ($ "#correctness")
             (crate/html
-              (if answer-correct
+              (if correct
                 [:p {:class "correct"} "Correct!"]
                 [:p {:class "incorrect"}
                  (str "Incorrect :(. Correct answer is: " answer " --- you entered: " input)])))
@@ -38,21 +39,19 @@
       (swap! finished-equations
              ;todo replace answer with user answer
              (let [equation-with-correctness
-                   (assoc current-equation
-                     :user-answer
-                     (if answer-correct :correct :incorrect))]
+                   (dissoc (assoc current-equation :correct correct :user-answer user-answer) "answer")]
                #(conj % equation-with-correctness)))
 
       (html ($ "#last-question")
             (crate/html
-              [:p {:class answer-correct}
+              [:p {:class (if correct "correct" "incorrect")}
                (str (get current-equation "equation") "=" (get current-equation "answer"))])))))
 
 (defn- save-equations []
   (POST "/answers"
         {:params        {:equations @finished-equations
                          ;todo make user id specific for each user
-                         :user-id "12345"}
+                         :user-id   "12345"}
          :handler       println
          :error-handler println
          :format        :json})

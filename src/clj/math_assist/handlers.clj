@@ -50,10 +50,14 @@
      (javascript-tag "goog.require('math_assist')")]))
 
 (defn- get-statistics [req]
-  (let [user-id (get-in req [:params "user-id"])]
+  (let [user-id (get-in req [:params "user-id"])
+        range (get-in req [:params "range"])
+        eqns-for-stats {:equations (equations/get-by-user user-id)}]
     {:status  200
      :headers {"Content-Type" "application/json"}
-     :body    (eqn-stats/correctness {:equations (equations/get-by-user user-id)})}))
+     :body    (eqn-stats/correctness (if range
+                                       (assoc eqns-for-stats :range range)
+                                       eqns-for-stats))}))
 
 (defn math-assist-handlers [req]
   (let [hf (case (req :uri)

@@ -21,7 +21,8 @@
 
 (defn- get-equations []
   (GET "/equations" {:handler         eqn-handler
-                     :response-format :json}))
+                     :response-format :json
+                     :params {:user-id "12345"}}))
 
 (defn- check-answer [input]
   (let [current-equation (peek @equations)

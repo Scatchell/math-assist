@@ -16,6 +16,24 @@ Mental math practice tool that should allow users to advance their math skills a
 
 Under construction, not ready for public usage yet
 
+### Local start
+
+First, make sure the databse is started
+
+`mongod` (using default directory and port)
+
+Then, build public files by compiling clojurescript
+
+`lein cljsbuld auto`
+
+Then, start server
+
+`lein run`
+
+Local instance of app will be available at:
+
+http://localhost:8080/
+
 ## License
 
 Copyright © 2019 Anthony Scatchell

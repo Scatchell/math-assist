@@ -1,5 +1,6 @@
 (ns math-assist.equations
-  (:require [math-assist.random :as random]))
+  (:require [math-assist.random :as random]
+            [clojure.string :as str]))
 
 (def types {"*" *})
 
@@ -23,7 +24,7 @@
   (apply str (drop-last string)))
 
 (defn eqn-to-object
-  "convert equation to clojure edn representation "
+  "convert equation to clojure edn representation"
   [eqn]
   (let [numbers (reverse (:numbers eqn))
         result (reduce (types (:type eqn)) numbers)
@@ -35,6 +36,17 @@
      :answer   result}
     )
   )
+
+;todo currently only works for multiplication
+(defn config-from-equation [equation]
+  "convert equation string to configuration
+  which represents equation (for statistical analysis)"
+  (let [type "*"
+        numbers (+ 1 (count (re-seq #"\*" equation)))
+        max (apply max (map #(Integer/parseInt %) (str/split equation #"\*")))]
+    {:type    type
+     :numbers numbers
+     :max     max}))
 
 (defn eqn-to-string
   "convert equation to string representation
@@ -51,13 +63,4 @@
       (if (:show-result conf)
         (str equation "=" result)
         equation)))
-  )
-
-(defn repl-run []
-  (let [eqns (repeatedly 10 #(equation {:type    "*"
-                                        :numbers 2
-                                        :max     20}))]
-
-    (for [eqn eqns] (prn (eqn-to-string {} eqn)))
-    )
   )

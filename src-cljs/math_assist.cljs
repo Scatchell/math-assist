@@ -36,6 +36,7 @@
                  (str "Incorrect :(. Correct answer is: " answer " --- you entered: " input)])))
 
       (swap! finished-equations
+             ;todo replace answer with user answer
              (let [equation-with-correctness
                    (assoc current-equation
                      :user-answer

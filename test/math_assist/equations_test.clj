@@ -32,4 +32,16 @@
                            :numbers [4 5]
                            :answer  20})
            {:equation "4*5"
-            :answer   20}))))
+            :answer   20})))
+
+  (testing "convert equation data to config"
+    (is (= (config-from-equation "10*12")
+           {:type    "*"
+            :numbers 2
+            :max     12})))
+
+  (testing "convert equation data to config with more than 2 numbers"
+    (is (= (config-from-equation "10*12*14*16*19")
+           {:type    "*"
+            :numbers 5
+            :max     19}))))

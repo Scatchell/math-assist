@@ -50,25 +50,64 @@
              :correctness 50M}])))
 
   (testing "difficulty increase when many questions are correct"
-    (is (= (difficulty-assessment {:equations [{:equation "5*7"
-                                                :correct  true}
+    (is (= (difficulty-assessment {:equations   [{:equation "5*7"
+                                                  :correct  true}
 
-                                               {:equation "10*12"
-                                                :correct  true}
+                                                 {:equation "10*12"
+                                                  :correct  true}
 
-                                               {:equation "12*13"
-                                                :correct  true}]})
+                                                 {:equation "12*13"
+                                                  :correct  true}]
+                                   :split-point 80M
+                                   :alteration-range 5})
 
            :increase)))
 
   (testing "difficulty decrease when many questions are incorrect"
-    (is (= (difficulty-assessment {:equations [{:equation "5*7"
-                                                :correct  true}
+    (is (= (difficulty-assessment {:equations   [{:equation "5*7"
+                                                  :correct  true}
 
-                                               {:equation "10*12"
-                                                :correct  false}
+                                                 {:equation "10*12"
+                                                  :correct  false}
 
-                                               {:equation "12*13"
-                                                :correct  false}]})
+                                                 {:equation "12*13"
+                                                  :correct  false}]
+                                   :split-point 80M
+                                   :alteration-range 5})
 
-           :decrease))))
+           :decrease)))
+
+  (testing "difficulty stays the same when not many questions are incorrect or correct"
+    (is (= (difficulty-assessment {:equations   [{:equation "10*12"
+                                                  :correct  true}
+
+                                                 {:equation "10*12"
+                                                  :correct  true}
+
+                                                 {:equation "12*13"
+                                                  :correct  true}
+
+                                                 {:equation "5*7"
+                                                  :correct  true}
+
+                                                 {:equation "10*12"
+                                                  :correct  true}
+
+                                                 {:equation "10*12"
+                                                  :correct  true}
+
+                                                 {:equation "12*13"
+                                                  :correct  true}
+
+                                                 {:equation "5*7"
+                                                  :correct  true}
+
+                                                 {:equation "10*12"
+                                                  :correct  false}
+
+                                                 {:equation "12*13"
+                                                  :correct  false}]
+                                   :split-point 80M
+                                   :alteration-range 5})
+
+           :no-change))))

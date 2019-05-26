@@ -24,8 +24,14 @@
   (let [groups (group-by (partial group-to-number-categories range) equations)]
     (map correctness-of-eqn-category groups)))
 
-(defn difficulty-assessment [{:keys [equations]}]
-  (if (> (correctness-of-eqns equations) 80M) :increase :decrease)
+(defn difficulty-assessment [{:keys [equations split-point alteration-range] :or {split-point 80M alteration-range 5}}]
+  (let [correctness (correctness-of-eqns equations)]
+    (if (> correctness (+ split-point alteration-range))
+      :increase
+      (if (< correctness (- split-point alteration-range))
+        :decrease
+        :no-change)))
+
   )
 
 
